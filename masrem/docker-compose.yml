@@ -1,0 +1,38 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-masrem
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql-masrem
+  agp:
+    image: s6rgior6/masrem:backend-1.0.0
+    container_name: masrem-audit
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT}:8080"
+    env_file:
+      - ./.backend.env
+    depends_on:
+      - mysql
+    volumes:
+      - ../ftp_folder:/ftp_folder
+  frontend:
+    image: s6rgior6/masrem:frontend-1.0.0
+    container_name: masrem-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
+    env_file:
+      - ./.frontend.env
+    depends_on:
+      - agp
+volumes:
+  mysql-data:
