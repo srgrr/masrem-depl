@@ -11,7 +11,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql-masrem
   agp:
-    image: s6rgior6/masrem:backend-1.0.0
+    image: s6rgior6/masrem:backend-${MASREM_VERSION}
     container_name: masrem-audit
     restart: unless-stopped
     ports:
@@ -23,7 +23,7 @@ services:
     volumes:
       - ../ftp_folder:/ftp_folder
   frontend:
-    image: s6rgior6/masrem:frontend-1.0.0
+    image: s6rgior6/masrem:frontend-${MASREM_VERSION}
     container_name: masrem-frontend
     restart: unless-stopped
     ports:
